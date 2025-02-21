@@ -44,21 +44,23 @@ android {
 
 dependencies {
 
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.retrofit)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.coil.compose)
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
 
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

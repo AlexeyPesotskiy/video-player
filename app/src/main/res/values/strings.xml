@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Video player</string>
+    <string name="error">ошибка</string>
+    <string name="error_screen_message">ОШИБКА</string>
 </resources>

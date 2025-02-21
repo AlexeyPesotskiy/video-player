@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetVideoInfoListUseCase @Inject constructor(
     private val videoRepository: VideoRepository,
 ) {
-    suspend fun execute() = videoRepository.getVideoList()
+    suspend fun execute() = videoRepository.getVideoInfoList()
 }

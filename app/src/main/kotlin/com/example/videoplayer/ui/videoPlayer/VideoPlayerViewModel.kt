@@ -1,8 +1,7 @@
-package com.example.videoplayer.ui
+package com.example.videoplayer.ui.videoPlayer
 
 import android.content.Context
 import android.net.Uri
-import android.widget.MediaController
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer

@@ -1,4 +1,4 @@
-package com.example.videoplayer.ui
+package com.example.videoplayer.ui.videoList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.example.videoplayer.ui
+package com.example.videoplayer.ui.videoList
 
 import androidx.compose.runtime.Immutable
 import com.example.videoplayer.domain.model.VideoInfo
