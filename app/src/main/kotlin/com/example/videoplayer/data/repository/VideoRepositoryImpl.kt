@@ -11,7 +11,7 @@ class VideoRepositoryImpl @Inject constructor(
     private val videoInfoMappers: VideoInfoMappers,
 ) : VideoRepository {
     override suspend fun getVideoList(): List<VideoInfo> =
-        videoApiService.fetchVideosList().items.map {
+        videoApiService.fetchVideos().categories[0].videos.map {
             videoInfoMappers.mapToDomain(it)
         }
 }

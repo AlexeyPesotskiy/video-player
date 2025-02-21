@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.videoplayer.domain.usecase.GetVideoInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +19,11 @@ class VideoListViewModel @Inject constructor(
 
     private val _uiState: MutableStateFlow<VideoListUiState> =
         MutableStateFlow(
-            VideoListUiState.Success(emptyList())
+            VideoListUiState(
+                videoInfoList = emptyList(),
+                isLoading = false,
+                isError = false
+            )
         )
     var uiState = _uiState.asStateFlow()
 
@@ -28,17 +33,25 @@ class VideoListViewModel @Inject constructor(
 
     fun getVideoInfoList() = viewModelScope.launch(Dispatchers.IO) {
         _uiState.update {
-            VideoListUiState.Loading
+            it.copy(
+                isLoading = true,
+            )
         }
+        delay(20)
         try {
             _uiState.update {
-                VideoListUiState.Success(
+                VideoListUiState(
+                    isLoading = false,
+                    isError = false,
                     videoInfoList = getVideoInfoListUseCase.execute()
                 )
             }
         } catch (e: Exception) {
             _uiState.update {
-                VideoListUiState.Error
+                it.copy(
+                    isLoading = false,
+                    isError = true,
+                )
             }
         }
     }

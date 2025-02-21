@@ -9,28 +9,33 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
+import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     @Provides
-    fun provideRetrofit(): Retrofit =
-        Retrofit.Builder()
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl(BASE_URL)
-            .build()
+    @Named("BASE_URL")
+    fun provideBaseUrl(): String =
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/"
 
     @Provides
-    fun provideVideoApiService(
-        retrofit: Retrofit,
-    ): VideoApiService = retrofit.create(VideoApiService::class.java)
+    fun provideRetrofit(
+        @Named("BASE_URL")
+        baseUrl: String
+    ): Retrofit =
+        Retrofit.Builder()
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(baseUrl)
+            .build()
 
     private val json = Json {
         ignoreUnknownKeys = true
     }
 
-    companion object {
-        private const val BASE_URL = "https://www.googleapis.com/youtube/v3/"
-    }
+    @Provides
+    fun provideVideoApiService(
+        retrofit: Retrofit,
+    ): VideoApiService = retrofit.create(VideoApiService::class.java)
 }
