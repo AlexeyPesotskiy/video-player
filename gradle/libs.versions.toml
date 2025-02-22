@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.1"
 coilCompose = "2.7.0"
+ffmpegmediametadataretriever = "1.0.14"
 hiltAndroid = "2.55"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.0"
@@ -20,6 +21,7 @@ pluginSerialization = "2.0.20"
 ksp = "2.1.0-1.0.29"
 kotlinxSerializationJson = "1.8.0"
 navigationCompose = "2.8.7"
+roomCompiler = "2.6.1"
 swiperefreshlayout = "1.1.0"
 
 [libraries]
@@ -28,7 +30,11 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Exoplayer" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+ffmpegmediametadataretriever = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever", version.ref = "ffmpegmediametadataretriever" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

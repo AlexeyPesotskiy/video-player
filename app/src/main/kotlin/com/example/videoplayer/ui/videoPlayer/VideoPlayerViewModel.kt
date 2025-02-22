@@ -24,6 +24,10 @@ class VideoPlayerViewModel @Inject constructor(
         exoPlayer.playWhenReady = true
     }
 
+    fun pauseExoPlayer() {
+        exoPlayer.pause()
+    }
+
     override fun onCleared() {
         super.onCleared()
         exoPlayer.release()

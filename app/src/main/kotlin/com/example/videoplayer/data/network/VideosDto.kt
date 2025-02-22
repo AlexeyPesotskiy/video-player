@@ -1,4 +1,4 @@
-package com.example.videoplayer.data.network.model
+package com.example.videoplayer.data.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

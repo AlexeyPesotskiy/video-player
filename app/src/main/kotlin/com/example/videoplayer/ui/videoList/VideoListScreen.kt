@@ -1,6 +1,6 @@
 package com.example.videoplayer.ui.videoList
 
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -14,12 +14,16 @@ fun VideoListScreen(
 ) {
     val state = viewModel.uiState.collectAsState().value
     val onUpdateVideoList: () -> Unit = {
-        viewModel.getVideoInfoList()
+        viewModel.fetchVideoInfoList()
+    }
+    val onErrorDialogDismiss: () -> Unit = {
+        viewModel.clearError()
     }
 
     VideoListScreenContent(
         state = state,
         onUpdateVideoList = onUpdateVideoList,
+        onErrorDialogDismiss = onErrorDialogDismiss,
         onVideoListItemClick = onVideoListItemClick,
     )
 }
@@ -28,24 +32,23 @@ fun VideoListScreen(
 private fun VideoListScreenContent(
     state: VideoListUiState,
     onUpdateVideoList: () -> Unit,
+    onErrorDialogDismiss: () -> Unit,
     onVideoListItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val listState = rememberLazyListState()
+    val gridState = rememberLazyGridState()
 
     ComposeSwipeRefreshLayout(
         isRefreshing = state.isLoading,
         onRefresh = onUpdateVideoList,
-        lazyListState = listState,
+        lazyGridState = gridState,
     ) {
-        if (state.isError)
-            ErrorScreen(modifier)
-        else
-            VideoList(
-                state = state,
-                onVideoListItemClick = onVideoListItemClick,
-                lazyListState = listState,
-                modifier = modifier
-            )
+        VideoList(
+            state = state,
+            onVideoListItemClick = onVideoListItemClick,
+            onErrorDialogDismiss = onErrorDialogDismiss,
+            lazyListState = gridState,
+            modifier = modifier
+        )
     }
 }

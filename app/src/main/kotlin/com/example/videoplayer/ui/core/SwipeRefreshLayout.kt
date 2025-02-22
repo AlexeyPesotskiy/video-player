@@ -1,8 +1,8 @@
 package com.example.videoplayer.ui.core
 
 import android.content.Context
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -12,7 +12,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 fun ComposeSwipeRefreshLayout(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -22,8 +22,8 @@ fun ComposeSwipeRefreshLayout(
                 isNestedScrollingEnabled = false
 
                 setOnChildScrollUpCallback { _, _ ->
-                    lazyListState.firstVisibleItemIndex != 0 ||
-                            lazyListState.firstVisibleItemScrollOffset > 0
+                    lazyGridState.firstVisibleItemIndex != 0 ||
+                            lazyGridState.firstVisibleItemScrollOffset > 0
                 }
 
                 setOnRefreshListener { onRefresh() }
@@ -38,6 +38,6 @@ fun ComposeSwipeRefreshLayout(
         update = { swipeLayout ->
             swipeLayout.isRefreshing = isRefreshing
         },
-        modifier = modifier.statusBarsPadding()
+        modifier = modifier.systemBarsPadding()
     )
 }

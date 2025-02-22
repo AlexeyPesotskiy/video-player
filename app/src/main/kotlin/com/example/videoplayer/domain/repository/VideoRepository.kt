@@ -4,8 +4,12 @@ import com.example.videoplayer.domain.model.VideoInfo
 
 interface VideoRepository {
     /**
-     * Возвращает список видео с информацией (ссылка на видео, заголовок,
-     * ссылка на заставку, длительность)
+     * Возвращает загруженный из сети список видео с информацией
      */
-    suspend fun getVideoInfoList(): List<VideoInfo>
+    suspend fun fetchVideoInfoList(): List<VideoInfo>
+
+    /**
+     * Возвращает кэшированный список видео с информацией
+     */
+    suspend fun getCachedVideoInfoList(): List<VideoInfo>
 }
