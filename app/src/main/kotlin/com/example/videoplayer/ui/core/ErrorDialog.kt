@@ -15,12 +15,12 @@ fun ErrorDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(
-            text = stringResource(R.string.error_screen_message),
+            text = stringResource(R.string.error_dialog_title),
         ) },
         text = { Text(text = errorMessage) },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("OK")
+                Text(stringResource(R.string.error_dialog_confirm_button))
             }
         }
     )

@@ -6,5 +6,5 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [VideoInfoEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun videoDao(): VideoInfoDao
+    abstract fun videoInfoDao(): VideoInfoDao
 }

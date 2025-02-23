@@ -26,10 +26,11 @@ object DatabaseModule {
             AppDatabase::class.java,
             "videos_db"
         )
+        .allowMainThreadQueries()
         .build()
 
     @Provides
     fun provideVideoDao(database: AppDatabase): VideoInfoDao {
-        return database.videoDao()
+        return database.videoInfoDao()
     }
 }

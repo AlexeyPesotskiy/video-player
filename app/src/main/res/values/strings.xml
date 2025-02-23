@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Video player</string>
-    <string name="error">ошибка</string>
-    <string name="error_screen_message">ОШИБКА</string>
+    <string name="error_dialog_title">ОШИБКА</string>
+    <string name="error_dialog_confirm_button">OK</string>
+    <string name="error_loading_image">Ошибка загрузки изображения</string>
     <string name="video_list_screen_error_message">Ошибка загрузки данных. Проверьте интернет-соединение</string>
 </resources>

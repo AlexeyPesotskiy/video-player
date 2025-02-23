@@ -7,15 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,12 +52,14 @@ fun VideoList(
         LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE
 
     LazyVerticalGrid(
-        modifier = modifier.run {
-            if (isOrientationLandscape)
-                padding(horizontal = 40.dp)
-            else
-                this
-        },
+        modifier = modifier
+            .padding(bottom = 8.dp)
+            .run {
+                if (isOrientationLandscape)
+                    padding(horizontal = 40.dp)
+                else
+                    this
+            },
         columns = if (isOrientationLandscape)
             GridCells.Adaptive(220.dp)
         else
@@ -77,7 +78,8 @@ fun VideoList(
     if (state.isError)
         ErrorDialog(
             errorMessage = stringResource(R.string.video_list_screen_error_message),
-            onDismiss = onErrorDialogDismiss)
+            onDismiss = onErrorDialogDismiss
+        )
 }
 
 @Composable
@@ -112,7 +114,9 @@ private fun VideoThumbnail(
     duration: String,
 ) {
     Box {
-        val placeholderModifier = Modifier.padding(16.dp).height(64.dp).align(Alignment.Center)
+        val placeholderModifier = Modifier
+            .padding(16.dp)
+            .size(120.dp)
         VideoThumbnailImage(thumbnailUrl, placeholderModifier)
 
         Text(
@@ -142,17 +146,31 @@ fun VideoThumbnailImage(
             .build(),
         contentDescription = "",
         error = {
-            Icon(
-                Icons.Default.Close,
-                stringResource(R.string.error),
-                placeholderModifier
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_broken_image_24),
+                    stringResource(R.string.error_loading_image),
+                    placeholderModifier
+                )
+            }
         },
         loading = {
-            CircularProgressIndicator(modifier = placeholderModifier)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    strokeWidth = 8.dp,
+                    modifier = placeholderModifier
+                )
+            }
         },
         contentScale = ContentScale.FillWidth,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     )
 }
 

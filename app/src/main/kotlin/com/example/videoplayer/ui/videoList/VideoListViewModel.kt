@@ -3,42 +3,91 @@ package com.example.videoplayer.ui.videoList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.videoplayer.domain.model.VideoInfo
-import com.example.videoplayer.domain.usecase.FetchVideoInfoListUseCase
+import com.example.videoplayer.domain.usecase.FetchVideoInfoFlowUseCase
 import com.example.videoplayer.domain.usecase.GetCachedVideoInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.LinkedList
 import javax.inject.Inject
 
 @HiltViewModel
 class VideoListViewModel @Inject constructor(
-    private val fetchVideoInfoListUseCase: FetchVideoInfoListUseCase,
+    private val fetchVideoInfoFlowUseCase: FetchVideoInfoFlowUseCase,
     private val getCachedVideoInfoListUseCase: GetCachedVideoInfoListUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<VideoListUiState> =
         MutableStateFlow(
             VideoListUiState(
-                videoInfoList = emptyList(),
+                videoInfoList = LinkedList(),
                 isLoading = false,
                 isError = false
             )
         )
     var uiState = _uiState.asStateFlow()
+    private var fetchJob: Job? = null
 
     init {
         initVideoInfoList()
     }
 
-    fun fetchVideoInfoList() = viewModelScope.launch(Dispatchers.IO) {
+    private fun initVideoInfoList() {
+        fetchJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                collectVideoInfoFlow()
+            } catch (e: Exception) {
+                getCachedVideoInfoList()
+            }
+        }
+    }
+
+    fun fetchVideoInfoList() {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                collectVideoInfoFlow()
+            } catch (e: Exception) {
+                showErrorState()
+            }
+        }
+    }
+
+
+    private suspend fun collectVideoInfoFlow() {
         showLoadingState()
         delay(20)
         try {
-            showSuccessState(fetchVideoInfoListUseCase.execute())
+            fetchVideoInfoFlowUseCase.execute().collect { videoInfo ->
+                val currentList = uiState.value.videoInfoList
+                val newList = currentList.apply {
+                    val index = indexOfFirst { it.videoUrl == videoInfo.videoUrl }
+                    if (index >= 0) {
+                        set(index, videoInfo)
+                    } else {
+                        add(videoInfo)
+                    }
+                }
+                showSuccessState(
+                    newList
+                )
+            }
+        } catch (_: CancellationException) {}
+    }
+
+    private suspend fun getCachedVideoInfoList() {
+        try {
+            val cachedVideoList = getCachedVideoInfoListUseCase.execute()
+            if (cachedVideoList.isNotEmpty())
+                showErrorWithCacheState(LinkedList(cachedVideoList))
+            else
+                showErrorState()
         } catch (e: Exception) {
             showErrorState()
         }
@@ -51,29 +100,6 @@ class VideoListViewModel @Inject constructor(
             )
         }
 
-
-    private fun initVideoInfoList() = viewModelScope.launch(Dispatchers.IO) {
-        showLoadingState()
-        delay(20)
-        try {
-            showSuccessState(fetchVideoInfoListUseCase.execute())
-        } catch (e: Exception) {
-            getCachedVideoInfoList()
-        }
-    }
-
-    private suspend fun getCachedVideoInfoList() {
-        try {
-            val cachedVideoList = getCachedVideoInfoListUseCase.execute()
-            if (cachedVideoList.isNotEmpty())
-                showErrorWithCacheState(cachedVideoList)
-            else
-                showErrorState()
-        } catch (e: Exception) {
-            showErrorState()
-        }
-    }
-
     private fun showLoadingState() =
         _uiState.update {
             it.copy(
@@ -81,7 +107,7 @@ class VideoListViewModel @Inject constructor(
             )
         }
 
-    private fun showSuccessState(videoList: List<VideoInfo>) =
+    private fun showSuccessState(videoList: LinkedList<VideoInfo>) =
         _uiState.update {
             VideoListUiState(
                 isLoading = false,
@@ -90,7 +116,7 @@ class VideoListViewModel @Inject constructor(
             )
         }
 
-    private fun showErrorWithCacheState(videoList: List<VideoInfo>) =
+    private fun showErrorWithCacheState(videoList: LinkedList<VideoInfo>) =
         _uiState.update {
             it.copy(
                 isLoading = false,
